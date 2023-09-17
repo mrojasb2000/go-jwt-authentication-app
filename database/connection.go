@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mrojasb2000/go-jwt-authentication-app/helpers"
+	"github.com/mrojasb2000/go-jwt-authentication-app/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -14,8 +15,10 @@ func Connect() {
 	dbname := helpers.GetEnvVariable("DBNAME")
 
 	connectionString := fmt.Sprintf("%s:%s@/%s", username, password, dbname)
-	_, err := gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+	connection, err := gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 	if err != nil {
 		panic("Could not connect to database.")
 	}
+
+	connection.AutoMigrate(&models.User{})
 }
